@@ -5,6 +5,7 @@ import ProtectedRoute from "@/components/ProtectedRoute";
 import { apiFetch } from "@/lib/api";
 import { logout } from "@/lib/auth";
 import TalentProfileView from "@/components/TalentProfileView";
+import { usePathname } from "next/navigation";
 
 const handleDownloadCV = async () => {
   const token = localStorage.getItem("access_token");
@@ -38,50 +39,37 @@ export default function Dashboard() {
     const [loading, setLoading] = useState(true);
     const [talent, setTalent] = useState<any>(null);
     const [profileActive, setProfileActive] = useState<boolean | null>(null);
+    const pathname = usePathname();
 
 
     useEffect(() => {
-        const token = localStorage.getItem("access_token");
-        if (!token) return;
+    const token = localStorage.getItem("access_token");
+    if (!token) return;
 
-        fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/accounts/me/`, {
-            headers: {
-            Authorization: `Bearer ${token}`,
-            },
+    fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/accounts/me/`, {
+        headers: { Authorization: `Bearer ${token}` },
+    })
+        .then((res) => res.json())
+        .then((userData) => {
+        setUser(userData);
+
+        if (userData.is_staff || userData.is_superuser) return null;
+
+        return fetch(
+            `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/public/talents/${userData.username}/`
+        );
         })
-            .then((res) => res.json())
-            .then(async (userData) => {
-            setUser(userData);
+        .then((res) => {
+        if (!res) return null;
+        if (!res.ok) throw new Error("Talent tidak ditemukan");
+        return res.json();
+        })
+        .then((talentData) => {
+        if (talentData) setTalent(talentData);
+        })
+        .finally(() => setLoading(false));
+    }, [pathname]);
 
-            if (userData.is_staff || userData.is_superuser) {
-                setLoading(false);
-                return;
-            }
-
-            // 🔑 ambil profile dulu
-            const profile = await apiFetch("/profiles/me/");
-            setProfileActive(profile.is_active);
-
-            // ❌ BELUM AKTIF → STOP
-            if (!profile.is_active) {
-                setTalent(null);
-                setLoading(false);
-                return;
-            }
-
-            // ✅ BARU fetch public
-            const res = await fetch(
-                `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/public/talents/${userData.username}/`
-            );
-
-            if (!res.ok) throw new Error("Talent tidak ditemukan");
-
-            const talentData = await res.json();
-            setTalent(talentData);
-            })
-            .catch(console.error)
-            .finally(() => setLoading(false));
-    }, []);
 
     return (
         <ProtectedRoute>
