@@ -49,24 +49,17 @@ export default function TalentProfileView({ talent }: { talent: any }) {
               Pengalaman
             </h2>
 
-            {talent.experiences.length === 0 ? (
-              <p className="text-gray-500">Belum ada pengalaman</p>
-            ) : (
-              <ul className="space-y-4">
-                {talent.experiences.map((exp: any) => (
-                  <li
-                    key={exp.id}
-                    className="text-gray-800 border-l-4 border-blue-600 pl-4"
-                  >
-                    <h3 className="font-semibold">
-                      {exp.judul} ({exp.tahun_mulai})
-                    </h3>
-                    <p className="text-sm text-gray-500">{exp.tipe}</p>
-                    <p className="text-gray-700 mt-1">{exp.deskripsi}</p>
-                  </li>
-                ))}
-              </ul>
-            )}
+            {(talent.experiences?.length ?? 0) === 0 ? (
+                <p className="text-gray-500">Belum ada pengalaman</p>
+              ) : (
+                <ul className="space-y-4">
+                  {talent.experiences?.map((exp: any) => (
+                    <li key={exp.id}>
+                      ...
+                    </li>
+                  ))}
+                </ul>
+              )}
           </section>
         </div>
 
@@ -76,17 +69,12 @@ export default function TalentProfileView({ talent }: { talent: any }) {
               Skill
             </h2>
 
-            {talent.skills.length === 0 ? (
+            {(talent.skills?.length ?? 0) === 0 ? (
               <p className="text-gray-500">Belum ada skill</p>
             ) : (
               <div className="flex flex-wrap gap-2">
-                {talent.skills.map((skill: any) => (
-                  <span
-                    key={skill.id}
-                    className="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm"
-                  >
-                    {skill.nama_skill}
-                  </span>
+                {talent.skills?.map((skill: any) => (
+                  <span key={skill.id}>{skill.nama_skill}</span>
                 ))}
               </div>
             )}

@@ -48,7 +48,7 @@ export default function TalentDetailPage() {
   useEffect(() => {
     if (!API_BASE_URL || !username) return;
 
-    fetch(`${API_BASE_URL}/public/talents/${username}/`)
+    fetch(`${API_BASE_URL}/api/public/talents/${username}/`)
       .then((res) => {
         if (!res.ok) throw new Error("Talenta tidak ditemukan");
         return res.json();
