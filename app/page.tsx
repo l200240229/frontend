@@ -44,7 +44,7 @@ export default function PublicDashboard() {
     if (skill) params.append("skill", skill);
     if (prodi) params.append("prodi", prodi);
 
-    fetch(`${API_BASE_URL}/api/profiles/?${params.toString()}`)
+    fetch(`${API_BASE_URL}/api/profiles/public/talents/?${params.toString()}`)
       .then((res) => {
         if (!res.ok) throw new Error("Gagal memuat talenta");
         return res.json();
