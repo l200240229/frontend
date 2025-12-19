@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import { apiFetch } from "@/lib/api";
+import { useRouter } from "next/navigation";
 
 export default function ProfilePage() {
   const [form, setForm] = useState({
@@ -18,6 +19,7 @@ export default function ProfilePage() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState("");
+  const router = useRouter();
   const [foto, setFoto] = useState<File | null>(null);
   const normalizeWA = (value: string) => {
     if (value.startsWith("08")) {
@@ -108,6 +110,8 @@ const sanitizeInstagram = (value: string) => {
           body: formData,
         });
 
+        window.location.href = "/dashboard";
+
 
         setMessage("Profil berhasil disimpan");
     } catch (err) {
@@ -117,6 +121,9 @@ const sanitizeInstagram = (value: string) => {
         setSaving(false);
     }
     };
+
+    router.push("/dashboard");
+    router.refresh();
 
 
   return (
