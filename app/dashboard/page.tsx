@@ -59,7 +59,7 @@ export default function Dashboard() {
                 }
 
                 return fetch(
-                    `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/profiles/${userData.username}/`
+                    `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/public/talents/${userData.username}/`
                 );
             })
             .then((res) => {
