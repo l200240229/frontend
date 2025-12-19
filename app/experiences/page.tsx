@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import { apiFetch } from "@/lib/api";
+import { useRouter } from "next/navigation";
 
 type Experience = {
   id: number;
@@ -23,6 +24,7 @@ export default function ExperiencesPage() {
   const [editingId, setEditingId] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState("");
+  const router = useRouter();
 
   /* ===================== LOAD ===================== */
   const loadExperiences = async () => {
@@ -139,6 +141,8 @@ export default function ExperiencesPage() {
       alert(err.message || "Gagal menghapus pengalaman");
     }
   };
+  router.push("/dashboard");
+  router.refresh();
 
   /* ===================== UI ===================== */
   return (
