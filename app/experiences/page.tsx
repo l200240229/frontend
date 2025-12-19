@@ -28,8 +28,12 @@ export default function ExperiencesPage() {
     setLoading(true);
     apiFetch("/experiences/")
       .then((data) => setExperiences(Array.isArray(data) ? data : []))
-      .finally(() => setLoading(false));
+      .finally(() => {
+        setLoading(false);
+        setMessage("");
+      });
   };
+
 
   useEffect(() => {
     loadExperiences();
@@ -78,7 +82,7 @@ export default function ExperiencesPage() {
     try {
       if (editingId) {
         await apiFetch(`/experiences/${editingId}/`, {
-          method: "PUT",
+          method: "PATCH", // ⬅️ FIX DI SINI
           body: JSON.stringify(payload),
         });
         setMessage("Pengalaman berhasil diperbarui");
@@ -122,7 +126,11 @@ export default function ExperiencesPage() {
           <h1 className="text-2xl font-bold text-blue-600 mb-4">
             Pengalaman
           </h1>
-
+          {editingId && (
+            <p className="text-sm text-yellow-600 mb-2">
+              Sedang mengedit pengalaman — jangan lupa simpan perubahan
+            </p>
+          )}
           <form onSubmit={handleSubmit} className="space-y-3 mb-6">
             <input
               name="judul"
