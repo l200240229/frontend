@@ -26,7 +26,7 @@ export default function ExperiencesPage() {
 
   const loadExperiences = () => {
     setLoading(true);
-    apiFetch("/experiences/")
+    apiFetch("/api/experiences/")
       .then((data) => setExperiences(Array.isArray(data) ? data : []))
       .finally(() => {
         setLoading(false);
@@ -81,8 +81,8 @@ export default function ExperiencesPage() {
 
     try {
       if (editingId) {
-        await apiFetch(`/experiences/${editingId}/`, {
-          method: "PATCH", // ⬅️ FIX DI SINI
+        await apiFetch(`/api/experiences/${editingId}/`, {
+          method: "PATCH",
           body: JSON.stringify(payload),
         });
         setMessage("Pengalaman berhasil diperbarui");
@@ -115,7 +115,7 @@ export default function ExperiencesPage() {
 
   const handleDelete = async (id: number) => {
     if (!confirm("Hapus pengalaman ini?")) return;
-    await apiFetch(`/experiences/${id}/`, { method: "DELETE" });
+    await apiFetch(`/api/experiences/${id}/`, { method: "DELETE" });
     loadExperiences();
   };
 
