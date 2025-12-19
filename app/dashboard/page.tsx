@@ -43,31 +43,68 @@ export default function Dashboard() {
 
 
     useEffect(() => {
-    const token = localStorage.getItem("access_token");
-    if (!token) return;
+        let isMounted = true;
 
-    fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/accounts/me/`, {
-        headers: { Authorization: `Bearer ${token}` },
-    })
-        .then((res) => res.json())
-        .then((userData) => {
-        setUser(userData);
+        const loadDashboard = async () => {
+            setLoading(true);
 
-        if (userData.is_staff || userData.is_superuser) return null;
+            try {
+            const token = localStorage.getItem("access_token");
+            if (!token) return;
 
-        return fetch(
-            `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/public/talents/${userData.username}/`
-        );
-        })
-        .then((res) => {
-        if (!res) return null;
-        if (!res.ok) throw new Error("Talent tidak ditemukan");
-        return res.json();
-        })
-        .then((talentData) => {
-        if (talentData) setTalent(talentData);
-        })
-        .finally(() => setLoading(false));
+            // 1️⃣ ambil user
+            const userRes = await fetch(
+                `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/accounts/me/`,
+                {
+                headers: { Authorization: `Bearer ${token}` },
+                }
+            );
+
+            const userData = await userRes.json();
+            if (!isMounted) return;
+            setUser(userData);
+
+            // admin stop
+            if (userData.is_staff || userData.is_superuser) {
+                setTalent(null);
+                return;
+            }
+
+            // 2️⃣ cek profile aktif
+            const profile = await apiFetch("/profiles/me/");
+            if (!isMounted) return;
+
+            setProfileActive(profile.is_active);
+
+            if (!profile.is_active) {
+                setTalent(null);
+                return;
+            }
+
+            // 3️⃣ ambil public talent
+            const res = await fetch(
+                `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/public/talents/${userData.username}/`
+            );
+
+            if (!res.ok) throw new Error("Talent tidak ditemukan");
+
+            const talentData = await res.json();
+            if (!isMounted) return;
+
+            setTalent(talentData);
+            } catch (err) {
+            console.error(err);
+            setTalent(null);
+            } finally {
+            if (isMounted) setLoading(false);
+            }
+        };
+
+        loadDashboard();
+
+        return () => {
+            isMounted = false;
+        };
     }, [pathname]);
 
 
