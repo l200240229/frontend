@@ -141,8 +141,6 @@ export default function ExperiencesPage() {
       alert(err.message || "Gagal menghapus pengalaman");
     }
   };
-  router.push("/dashboard");
-  router.refresh();
 
   /* ===================== UI ===================== */
   return (

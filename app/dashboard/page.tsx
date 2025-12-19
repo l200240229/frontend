@@ -6,6 +6,8 @@ import { apiFetch } from "@/lib/api";
 import { logout } from "@/lib/auth";
 import TalentProfileView from "@/components/TalentProfileView";
 import { usePathname } from "next/navigation";
+import { useRouter } from "next/navigation";
+
 
 const handleDownloadCV = async () => {
   const token = localStorage.getItem("access_token");
@@ -40,6 +42,8 @@ export default function Dashboard() {
     const [talent, setTalent] = useState<any>(null);
     const [profileActive, setProfileActive] = useState<boolean | null>(null);
     const pathname = usePathname();
+    const router = useRouter();
+
 
 
     useEffect(() => {
@@ -106,8 +110,8 @@ export default function Dashboard() {
             isMounted = false;
         };
     }, [pathname]);
-
-
+        router.refresh();
+        
     return (
         <ProtectedRoute>
             <div className="min-h-screen bg-gray-100 p-6 ">
