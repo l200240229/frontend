@@ -116,7 +116,7 @@ export default function PublicDashboard() {
             Daftar Talenta
           </h3>
           <Link
-            href="/public/talents"
+            href="/api/profiles/public/talents/${username}/"
             className="inline- text-center bg-blue-600 text-sm text-white-600 rounded hover:bg-blue-700"
           >
             View All →
