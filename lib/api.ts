@@ -17,8 +17,11 @@ export async function apiFetch(
     ...(options.headers as Record<string, string>),
   };
 
-  // Jangan set Content-Type kalau FormData
-  if (!(options.body instanceof FormData)) {
+  // Jangan set JSON header kalau FormData
+  if (
+    options.body &&
+    !(options.body instanceof FormData)
+  ) {
     headers["Content-Type"] = "application/json";
   }
 
@@ -34,6 +37,7 @@ export async function apiFetch(
     }
   );
 
+  // Token expired
   if (response.status === 401) {
     if (typeof window !== "undefined") {
       localStorage.removeItem("access_token");
@@ -44,13 +48,26 @@ export async function apiFetch(
   }
 
   if (!response.ok) {
-    let msg = `HTTP ${response.status}`;
+    let message = `HTTP ${response.status}`;
+
     try {
       const data = await response.json();
-      msg = JSON.stringify(data);
+      if (typeof data === "object") {
+        message = Object.entries(data)
+          .map(
+            ([k, v]) =>
+              `${k}: ${
+                Array.isArray(v) ? v.join(", ") : v
+              }`
+          )
+          .join(" | ");
+      }
     } catch {}
-    throw new Error(msg);
+
+    throw new Error(message);
   }
 
-  return response.status === 204 ? null : response.json();
+  if (response.status === 204) return null;
+
+  return response.json();
 }
