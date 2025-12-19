@@ -243,6 +243,15 @@ const sanitizeInstagram = (value: string) => {
                 {saving ? "Menyimpan..." : "Simpan Profil"}
               </button>
 
+              <button
+                type="button"
+                onClick={() => router.push("/dashboard")}
+                className="bg-red-800 text-gray-800 px-4 py-2 rounded hover:bg-gray-300"
+              >
+                Kembali ke Dashboard
+              </button>
+
+
               {message && (
                 <p className="text-sm text-green-600 font-medium">
                   {message}

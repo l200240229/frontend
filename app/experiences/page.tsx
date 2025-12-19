@@ -202,6 +202,14 @@ export default function ExperiencesPage() {
               >
                 {editingId ? "Update Pengalaman" : "Tambah Pengalaman"}
               </button>
+              <button
+                type="button"
+                onClick={() => router.push("/dashboard")}
+                className="bg-red-800 text-gray-800 px-4 py-2 rounded hover:bg-gray-300"
+              >
+                Kembali ke Dashboard
+              </button>
+
 
               {editingId && (
                 <button

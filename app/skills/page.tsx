@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import { apiFetch } from "@/lib/api";
+import { useRouter } from "next/navigation";
 
 type Skill = {
   id: number;
@@ -12,6 +13,7 @@ type Skill = {
 
 export default function SkillsPage() {
   const [skills, setSkills] = useState<Skill[]>([]);
+  const router = useRouter();
   const [form, setForm] = useState({
     nama_skill: "",
     level: "",
@@ -140,6 +142,13 @@ export default function SkillsPage() {
               className="bg-blue-600 text-white px-4 py-2 rounded"
             >
               {editingId ? "Update Skill" : "Tambah Skill"}
+            </button>
+            <button
+              type="button"
+              onClick={() => router.push("/dashboard")}
+              className="bg-red-800 text-gray-800 px-4 py-2 rounded hover:bg-gray-300"
+            >
+              Kembali ke Dashboard
             </button>
 
             {message && (
