@@ -1,13 +1,4 @@
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
-
-if (!API_BASE_URL) {
-  throw new Error("NEXT_PUBLIC_API_BASE_URL belum diset");
-}
-
-export async function apiFetch(
-  endpoint: string,
-  options: RequestInit = {}
-) {
+export async function apiFetch(endpoint: string, options: RequestInit = {}) {
   const token =
     typeof window !== "undefined"
       ? localStorage.getItem("access_token")
@@ -17,8 +8,7 @@ export async function apiFetch(
     ...(options.headers as Record<string, string>),
   };
 
-  // ❗ JANGAN set JSON kalau FormData
-  if (options.method !== "DELETE" && !(options.body instanceof FormData)) {
+  if (!(options.body instanceof FormData)) {
     headers["Content-Type"] = "application/json";
   }
 
@@ -34,44 +24,9 @@ export async function apiFetch(
     }
   );
 
-  // 🔴 TOKEN EXPIRED
-  if (response.status === 401) {
-    if (typeof window !== "undefined") {
-      localStorage.removeItem("access_token");
-      localStorage.removeItem("refresh_token");
-
-      if (window.location.pathname !== "/login") {
-        window.location.href = "/login";
-      }
-    }
-    throw new Error("Session expired. Silakan login ulang.");
-  }
-
-  // ❌ ERROR LAIN
   if (!response.ok) {
-    let errorMessage = `HTTP ${response.status}`;
-
-    try {
-      const data = await response.json();
-      console.error("API ERROR RESPONSE:", data);
-
-      if (typeof data === "object") {
-        errorMessage = Object.entries(data)
-          .map(([key, val]) =>
-            `${key}: ${Array.isArray(val) ? val.join(", ") : val}`
-          )
-          .join(" | ");
-      }
-    } catch {
-      console.error("Failed to parse error JSON");
-    }
-
-    throw new Error(errorMessage);
+    throw new Error(`HTTP ${response.status}`);
   }
 
-  if (response.status === 204) {
-    return null;
-  }
-
-  return response.json();
+  return response.status === 204 ? null : response.json();
 }
