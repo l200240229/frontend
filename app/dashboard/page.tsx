@@ -7,7 +7,7 @@ import { logout } from "@/lib/auth";
 import TalentProfileView from "@/components/TalentProfileView";
 import { usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
-
+import TalentSkeleton from "@/components/TalentSkeleton";
 
 const handleDownloadCV = async () => {
   const token = localStorage.getItem("access_token");
@@ -43,6 +43,16 @@ export default function Dashboard() {
     const [profileActive, setProfileActive] = useState<boolean | null>(null);
     const pathname = usePathname();
     const router = useRouter();
+    const [reloadKey, setReloadKey] = useState(0);
+
+    useEffect(() => {
+    const handleFocus = () => {
+        setReloadKey((k) => k + 1);
+    };
+
+    window.addEventListener("focus", handleFocus);
+    return () => window.removeEventListener("focus", handleFocus);
+    }, []);
 
 
 
@@ -55,6 +65,9 @@ export default function Dashboard() {
             try {
             const token = localStorage.getItem("access_token");
             if (!token) return;
+
+            setLoading(true);
+            setTalent(null);
 
             // 1️⃣ ambil user
             const userRes = await fetch(
@@ -110,7 +123,6 @@ export default function Dashboard() {
             isMounted = false;
         };
     }, [pathname]);
-        router.refresh();
         
     return (
         <ProtectedRoute>
@@ -186,7 +198,9 @@ export default function Dashboard() {
                                 Preview Talents Public
                             </h2>
 
-                            {talent && talent.username ? (
+                            {loading ? (
+                                <TalentSkeleton />
+                            ) : talent && talent.username ? (
                                 <div className="border rounded-xl overflow-hidden">
                                     <TalentProfileView talent={talent} />
                                 </div>
