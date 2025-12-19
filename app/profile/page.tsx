@@ -45,7 +45,7 @@ const sanitizeInstagram = (value: string) => {
 
   // === LOAD PROFILE ===
   useEffect(() => {
-    apiFetch("/api/profiles/me/")
+    apiFetch("/profiles/me/")
       .then((data) => {
         setForm({
           nama: data.nama || "",
