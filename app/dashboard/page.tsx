@@ -44,7 +44,7 @@ export default function Dashboard() {
         const token = localStorage.getItem("access_token");
         if (!token) return;
 
-        fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/accounts/me/`, {
+        fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/accounts/me/`, {
             headers: {
             Authorization: `Bearer ${token}`,
             },
