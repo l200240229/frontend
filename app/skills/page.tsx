@@ -20,17 +20,21 @@ export default function SkillsPage() {
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState("");
 
-  const loadSkills = () => {
-    setLoading(true);
-    apiFetch("/skills/")
-      .then((data) => {
-        if (Array.isArray(data)) {
-          setSkills(data);
-        } else {
-          setSkills(data?.results || []);
-        }
-      })
-      .finally(() => setLoading(false));
+  const loadSkills = async () => {
+    try {
+      setLoading(true);
+      const data = await apiFetch("/skills/");
+      if (Array.isArray(data)) {
+        setSkills(data);
+      } else {
+        setSkills(data?.results || []);
+      }
+    } catch (err) {
+      console.error(err);
+      setMessage("Gagal memuat skill");
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {

@@ -17,8 +17,8 @@ export async function apiFetch(
     ...(options.headers as Record<string, string>),
   };
 
-  // ❗ HANYA SET JSON HEADER JIKA BUKAN DELETE
-  if (options.method !== "DELETE") {
+  // ❗ JANGAN set JSON kalau FormData
+  if (options.method !== "DELETE" && !(options.body instanceof FormData)) {
     headers["Content-Type"] = "application/json";
   }
 
@@ -26,10 +26,13 @@ export async function apiFetch(
     headers.Authorization = `Bearer ${token}`;
   }
 
-  const response = await fetch(`${API_BASE_URL}${endpoint}`, {
-    ...options,
-    headers,
-  });
+  const response = await fetch(
+    `${API_BASE_URL}/api${endpoint}`,
+    {
+      ...options,
+      headers,
+    }
+  );
 
   // 🔴 TOKEN EXPIRED
   if (response.status === 401) {
@@ -49,20 +52,22 @@ export async function apiFetch(
     let errorMessage = `HTTP ${response.status}`;
 
     try {
-        const data = await response.json();
-        console.error("API ERROR RESPONSE:", data);
+      const data = await response.json();
+      console.error("API ERROR RESPONSE:", data);
 
-        if (typeof data === "object") {
+      if (typeof data === "object") {
         errorMessage = Object.entries(data)
-            .map(([key, val]) => `${key}: ${Array.isArray(val) ? val.join(", ") : val}`)
-            .join(" | ");
-        }
-    } catch (e) {
-        console.error("Failed to parse error JSON");
+          .map(([key, val]) =>
+            `${key}: ${Array.isArray(val) ? val.join(", ") : val}`
+          )
+          .join(" | ");
+      }
+    } catch {
+      console.error("Failed to parse error JSON");
     }
 
     throw new Error(errorMessage);
-    }
+  }
 
   if (response.status === 204) {
     return null;
