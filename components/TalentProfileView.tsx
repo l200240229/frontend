@@ -50,16 +50,38 @@ export default function TalentProfileView({ talent }: { talent: any }) {
             </h2>
 
             {(talent.experiences?.length ?? 0) === 0 ? (
-                <p className="text-gray-500">Belum ada pengalaman</p>
-              ) : (
-                <ul className="space-y-4">
-                  {talent.experiences?.map((exp: any) => (
-                    <li key={exp.id}>
-                      ...
-                    </li>
-                  ))}
-                </ul>
-              )}
+              <p className="text-gray-500">Belum ada pengalaman</p>
+            ) : (
+              <ul className="space-y-5">
+                {talent.experiences.map((exp: any) => (
+                  <li
+                    key={exp.id}
+                    className="border-l-4 border-blue-600 pl-4"
+                  >
+                    <h3 className="font-semibold text-gray-900">
+                      {exp.judul}
+                      {exp.tahun_mulai && (
+                        <span className="text-sm text-gray-500">
+                          {" "}· {exp.tahun_mulai}
+                        </span>
+                      )}
+                    </h3>
+
+                    {exp.tipe && (
+                      <p className="text-sm text-blue-600 font-medium">
+                        {exp.tipe}
+                      </p>
+                    )}
+
+                    {exp.deskripsi && (
+                      <p className="text-gray-700 mt-1">
+                        {exp.deskripsi}
+                      </p>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            )}
           </section>
         </div>
 
@@ -69,12 +91,17 @@ export default function TalentProfileView({ talent }: { talent: any }) {
               Skill
             </h2>
 
-            {(talent.skills?.length ?? 0) === 0 ? (
+            {talent.skills.length === 0 ? (
               <p className="text-gray-500">Belum ada skill</p>
             ) : (
               <div className="flex flex-wrap gap-2">
-                {talent.skills?.map((skill: any) => (
-                  <span key={skill.id}>{skill.nama_skill}</span>
+                {talent.skills.map((skill: any) => (
+                  <span
+                    key={skill.id}
+                    className="bg-blue-500/10 text-blue-700 border border-blue-500/30 px-3 py-1 rounded-full text-sm"
+                  >
+                    {skill.nama_skill}
+                  </span>
                 ))}
               </div>
             )}
