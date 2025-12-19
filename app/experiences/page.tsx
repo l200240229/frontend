@@ -29,8 +29,16 @@ export default function ExperiencesPage() {
     setLoading(true);
     try {
       const data = await apiFetch("/experiences/");
-      console.log("EXPERIENCES:", data); // debugging aman
-      setExperiences(Array.isArray(data) ? data : []);
+      console.log("EXPERIENCES:", data);
+
+      // 🔥 SUPPORT PAGINATION & NON-PAGINATION
+      if (Array.isArray(data)) {
+        setExperiences(data);
+      } else if (Array.isArray(data.results)) {
+        setExperiences(data.results);
+      } else {
+        setExperiences([]);
+      }
     } catch (err: any) {
       console.error(err);
       setMessage(err.message || "Gagal memuat pengalaman");
