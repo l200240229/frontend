@@ -246,7 +246,7 @@ const sanitizeInstagram = (value: string) => {
               <button
                 type="button"
                 onClick={() => router.push("/dashboard")}
-                className="bg-red-800 text-gray-800 px-4 py-2 rounded hover:bg-gray-300"
+                className="bg-red-500 text-white-800 w-full px-4 py-2 rounded hover:bg-gray-800"
               >
                 Kembali ke Dashboard
               </button>

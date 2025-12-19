@@ -33,37 +33,49 @@ export default function PublicTalentsPage() {
   useEffect(() => {
     if (!API_BASE_URL) return;
 
+    setLoading(true);
+    setError("");
+
     const params = new URLSearchParams();
     if (search) params.append("search", search);
     if (skill) params.append("skill", skill);
     if (prodi) params.append("prodi", prodi);
 
-    fetch(`${API_BASE_URL}/public/talents/?${params.toString()}`)
-        .then((res) => {
+    fetch(`${API_BASE_URL}/api/public/talents/?${params.toString()}`)
+      .then((res) => {
         if (!res.ok) throw new Error("Gagal memuat talenta");
         return res.json();
-        })
-        .then((data) => setTalents(data))
-        .catch((err) => setError(err.message))
-        .finally(() => setLoading(false));
-    }, [search, skill, prodi]);
+      })
+      .then((data) => {
+        if (Array.isArray(data)) {
+          setTalents(data);
+        } else if (Array.isArray(data.results)) {
+          setTalents(data.results);
+        } else {
+          setTalents([]);
+        }
+      })
+      .catch((err) => setError(err.message))
+      .finally(() => setLoading(false));
+  }, [search, skill, prodi]);
+
 
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-100">
-      <nav className="bg-white border-b">
+      <nav className="bg-blue-700">
         <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-          <Link href="/" className="font-bold text-blue-600 text-lg">
-            Talenta Mahasiswa
-          </Link>
+          <h1 className="font-bold text-white-100 text-xl">
+            Talenta Mahasiswa UMS
+          </h1>
 
           <div className="space-x-6 text-sm">
-            <Link href="/" className="text-gray-600 hover:text-blue-600">
+            <Link href="/" className="text-white-600 hover:text-blue-100">
               Home
             </Link>
             <Link
               href="/login"
-              className="bg-blue-600 text-white px-4 py-2 rounded"
+              className="bg-red-800 text-white px-4 py-2 rounded"
             >
               Login
             </Link>
@@ -71,13 +83,13 @@ export default function PublicTalentsPage() {
         </div>
       </nav>
 
-      <section className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white">
-        <div className="max-w-7xl mx-auto px-6 py-16 text-center">
-          <h1 className="text-4xl font-bold mb-3">
-            Daftar Talenta Mahasiswa
-          </h1>
-          <p className="text-blue-100 max-w-2xl mx-auto">
-            Jelajahi profil mahasiswa berbakat Universitas Muhammadiyah Surakarta
+      <section className="bg-gradient-to-r from-blue-700 to-indigo-800 text-white">
+        <div className="max-w-7xl mx-auto px-6 py-20 text-center">
+          <h2 className="text-4xl font-bold mb-4">
+            Talenta Mahasiswa UMS
+          </h2>
+          <p className="text-lg text-blue-100 max-w-2xl mx-auto mb-8">
+            Gerbang utama menuju sumber daya manusia unggul. Temukan profil mahasiswa berprestasi dan siap kerja dari berbagai program studi Universitas Muhammadiyah Surakarta.
           </p>
         </div>
       </section>
