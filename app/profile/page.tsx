@@ -110,9 +110,6 @@ const sanitizeInstagram = (value: string) => {
           body: formData,
         });
 
-        window.location.href = "/dashboard";
-
-
         setMessage("Profil berhasil disimpan");
     } catch (err) {
         console.error(err);
@@ -121,9 +118,6 @@ const sanitizeInstagram = (value: string) => {
         setSaving(false);
     }
     };
-
-    router.push("/dashboard");
-    router.refresh();
 
 
   return (
