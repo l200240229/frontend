@@ -157,7 +157,7 @@ export default function Dashboard() {
                                 Preview Talents Public
                             </h2>
 
-                            {talent ? (
+                            {talent && talent.username ? (
                                 <div className="border rounded-xl overflow-hidden">
                                     <TalentProfileView talent={talent} />
                                 </div>
