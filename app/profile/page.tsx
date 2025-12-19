@@ -233,12 +233,12 @@ const sanitizeInstagram = (value: string) => {
                 type="file"
                 accept="image/*"
                 onChange={(e) => setFoto(e.target.files?.[0] || null)}
-                className="bg-green-600 text-white w-full px-6 py-2 rounded"
+                className="bg-green-600 text-white w-full px-6 py-2 rounded  hover:bg-green-700"
                />
 
               <button
                 disabled={saving}
-                className="bg-blue-600 text-white w-full px-6 py-2 rounded"
+                className="bg-blue-600 text-white w-full px-6 py-2 rounded  hover:bg-blue-700"
               >
                 {saving ? "Menyimpan..." : "Simpan Profil"}
               </button>
@@ -246,7 +246,7 @@ const sanitizeInstagram = (value: string) => {
               <button
                 type="button"
                 onClick={() => router.push("/dashboard")}
-                className="bg-red-500 text-white-800 w-full px-4 py-2 rounded hover:bg-gray-800"
+                className="bg-red-500 text-white-800 w-full px-4 py-2 rounded hover:bg-red-600"
               >
                 Kembali ke Dashboard
               </button>

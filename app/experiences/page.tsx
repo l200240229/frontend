@@ -198,15 +198,15 @@ export default function ExperiencesPage() {
             <div className="flex gap-2">
               <button
                 type="submit"
-                className="bg-blue-600 text-white px-4 py-2 rounded"
+                className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
               >
                 {editingId ? "Update Pengalaman" : "Tambah Pengalaman"}
               </button>
-              
+
               <button
                 type="button"
                 onClick={() => router.push("/dashboard")}
-                className="bg-red-800 text-gray-800 px-4 py-2 rounded hover:bg-gray-300"
+                className="bg-red-500 text-white-800 px-4 py-2 rounded hover:bg-red-600"
               >
                 Kembali ke Dashboard
               </button>
@@ -216,7 +216,7 @@ export default function ExperiencesPage() {
                 <button
                   type="button"
                   onClick={resetForm}
-                  className="bg-gray-300 px-4 py-2 rounded"
+                  className="bg-aqua-500 px-4 py-2 rounded hover:bg-aqua-600"
                 >
                   Batal
                 </button>
