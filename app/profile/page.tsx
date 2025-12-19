@@ -45,7 +45,7 @@ const sanitizeInstagram = (value: string) => {
 
   // === LOAD PROFILE ===
   useEffect(() => {
-    apiFetch("/profiles/me/")
+    apiFetch("/api/profiles/me/")
       .then((data) => {
         setForm({
           nama: data.nama || "",
@@ -104,7 +104,7 @@ const sanitizeInstagram = (value: string) => {
         }
 
         await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/profiles/me/`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/profiles/me/`,
         {
             method: "PATCH",
             headers: {
