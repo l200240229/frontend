@@ -103,16 +103,11 @@ const sanitizeInstagram = (value: string) => {
         formData.append("foto", foto);
         }
 
-        await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/profiles/me/`,
-        {
-            method: "PATCH",
-            headers: {
-            Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-            },
-            body: formData,
-        }
-        );
+        await apiFetch("/profiles/me/", {
+          method: "PATCH",
+          body: formData,
+        });
+
 
         setMessage("Profil berhasil disimpan");
     } catch (err) {
