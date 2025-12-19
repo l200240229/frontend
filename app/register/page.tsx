@@ -28,7 +28,7 @@ export default function RegisterPage() {
 
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/accounts/register/`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/accounts/register/`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -37,8 +37,12 @@ export default function RegisterPage() {
       );
 
       if (!res.ok) {
-        const data = await res.json();
-        throw new Error(data.detail || "Registrasi gagal");
+        let message = "Registrasi gagal";
+        try {
+          const data = await res.json();
+          message = data.detail || message;
+        } catch {}
+        throw new Error(message);
       }
 
       router.push("/login");

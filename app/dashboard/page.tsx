@@ -6,47 +6,31 @@ import { apiFetch } from "@/lib/api";
 import { logout } from "@/lib/auth";
 import TalentProfileView from "@/components/TalentProfileView";
 
+const handleDownloadCV = async () => {
+  const token = localStorage.getItem("access_token");
+  if (!token) return;
 
-let isDownloading = false;
-
-const handleDownloadCV = async (e?: React.MouseEvent) => {
-    e?.preventDefault();
-    e?.stopPropagation();
-
-    if (isDownloading) return;
-    isDownloading = true;
-
-    try {
-        const token = localStorage.getItem("access_token");
-        if (!token) {
-            alert("Token tidak ditemukan");
-            return;
-        }
-
-        const response = await fetch("/api/cv", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ token }),
-        });
-
-        if (!response.ok) throw new Error("Gagal download");
-
-        const blob = await response.blob();
-        if (blob.size === 0) return;
-
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = "CV.pdf";
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
-        URL.revokeObjectURL(url);
-    } catch (err) {
-        console.error(err);
-    } finally {
-        isDownloading = false;
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/profiles/me/cv/`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
     }
+  );
+
+  if (!res.ok) {
+    alert("Gagal download CV");
+    return;
+  }
+
+  const blob = await res.blob();
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "CV.pdf";
+  a.click();
+  URL.revokeObjectURL(url);
 };
 
 export default function Dashboard() {
@@ -59,11 +43,12 @@ export default function Dashboard() {
         if (!token) return;
 
         // ambil user dulu
-        fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/accounts/me/`, {
+        fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/accounts/me/`, {
             headers: {
                 Authorization: `Bearer ${token}`,
             },
         })
+
             .then((res) => res.json())
             .then((userData) => {
                 setUser(userData);
@@ -74,7 +59,7 @@ export default function Dashboard() {
                 }
 
                 return fetch(
-                    `${process.env.NEXT_PUBLIC_API_BASE_URL}/public/talents/${userData.username}/`
+                    `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/profiles/${userData.username}/`
                 );
             })
             .then((res) => {
